@@ -28,6 +28,8 @@ Welcome to the **ITIL Ticket Analyzer** GitHub repository! This web application 
 
 Live Demo: https://apps.techray.dev/itil
 
+<img src="https://github.com/user-attachments/assets/6c123779-8edb-4cd8-9b34-0517c9c8e34e" alt="Screenshot 2024-09-16 003438" style="width:15%;">
+
 ---
 
 ## Technologies Used
