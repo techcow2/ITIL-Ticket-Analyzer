@@ -104,12 +104,12 @@
     color: #ffd700;
 }
 
-/* Hide the Input Parameters section */
+
 .input-parameters {
     display: none;
 }
 
-/* Styles for the welcome modal */
+
 #welcomeModal {
     transition: opacity 0.3s ease-in-out;
 }
