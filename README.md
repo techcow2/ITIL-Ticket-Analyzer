@@ -134,6 +134,12 @@ We welcome contributions to improve the ITIL Ticket Analyzer! Please follow thes
 
 ---
 
+## Special Thanks
+
+A special thanks to **[Puter](https://puter.com)** for powering the ITIL Ticket Analyzer with cutting-edge AI technology. Your AI engine has been instrumental in helping users quickly and effectively analyze IT help desk tickets. We deeply appreciate your support in making this app smarter and more efficient!
+
+---
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
