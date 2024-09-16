@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITIL Ticket Analyzer (beta)</title>
+    <script defer src="https://umami.techray.dev/script.js" data-website-id="28c621ee-76d6-4c0f-9d23-bc3856da073a"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Welcome Modal -->
+    <div id="welcomeModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4">Welcome to ITIL Ticket Analyzer</h2>
+            <p class="mb-6">This app is intended to provide general information and may contain inaccuracies. By using this app, you agree to our Terms of Service and Privacy Policy.</p>
+            <div class="flex justify-between">
+                <a href="https://apps.techray.dev/itil/terms/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800">Terms of Service</a>
+                <a href="https://apps.techray.dev/itil/privacy" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800">Privacy Policy</a>
+            </div>
+            <button id="acceptButton" class="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                I Understand
+            </button>
+        </div>
+    </div>
+
+    <div class="flex-grow flex items-center justify-center p-4">
+        <div class="content-width">
+            <div class="bg-white rounded-lg custom-shadow overflow-hidden">
+                <header>
+                    <div class="logo-container">
+                        <img src="logo.webp" alt="ITIL Ticket Analyzer Logo" class="logo-image">
+                    </div>
+                </header>
+                <main class="p-8">
+                    <div class="mb-6">
+                        <button id="toggleInstructions" class="w-full bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                            <i class="fas fa-info-circle mr-2"></i>How to Use
+                        </button>
+                        <div id="instructions" class="instructions hidden mt-4 bg-blue-50 p-4 rounded-md text-blue-800">
+                            <h3 class="font-bold mb-2">Instructions:</h3>
+                            <ol class="list-decimal list-inside space-y-2">
+                                <li>Select the number of affected customers and the criticality of the affected device.</li>
+                                <li>Indicate if any of the affected users is a VIP.</li>
+                                <li>Enter a brief summary of the IT issue in the text area below.</li>
+                                <li>Click the "Analyze Ticket" button to process the information.</li>
+                                <li>The app will determine the priority level and provide an explanation.</li>
+                                <li>You can print the results or generate an email based on the analysis.</li>
+                            </ol>
+                            <p class="mt-2"><strong>Note:</strong> Be as specific and concise as possible in your issue description for the best results.</p>
+                        </div>
+                    </div>
+                    <div class="mb-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700">
+                        <p class="font-bold">Disclaimer:</p>
+                        <p>This app uses AI to help you learn ITIL concepts but may not provide precise results. Please verify important information. Do not enter sensitive data, as third-party AI processing may pose exposure risks.</p>
+                    </div>
+                    <div class="mb-4">
+                        <label for="affectedCustomers" class="block mb-2 font-bold text-gray-700">Number of affected customers:</label>
+                        <select id="affectedCustomers" class="w-full p-2 border-2 border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300">
+                            <option value="">Select an option</option>
+                            <option value="low">Low amount</option>
+                            <option value="medium">Medium amount</option>
+                            <option value="high">High amount</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="deviceCriticality" class="block mb-2 font-bold text-gray-700">Criticality of affected device:</label>
+                        <select id="deviceCriticality" class="w-full p-2 border-2 border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300">
+                            <option value="">Select an option</option>
+                            <option value="non-critical">Non-critical</option>
+                            <option value="critical">Critical</option>
+                            <option value="very-critical">Very critical</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="vipAffected" class="block mb-2 font-bold text-gray-700">Is a VIP user affected?</label>
+                        <select id="vipAffected" class="w-full p-2 border-2 border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300">
+                            <option value="">Select an option</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-gray-700">Issue Description</h3>
+                    <textarea id="ticketSummary" class="w-full h-40 p-4 border-2 border-blue-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300" placeholder="Be as specific and concise as possible in your issue description for the best results. (10 word min.)"></textarea>
+                    <button id="analyzeButton" class="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transform hover:scale-105">
+                        Analyze Ticket
+                    </button>
+                    <div id="spinner" class="hidden mt-6 text-center">
+                        <i class="fas fa-circle-notch fa-spin text-blue-500 text-5xl"></i>
+                    </div>
+                    <div id="result" class="hidden mt-8 fade-in">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-blue-800">Analysis Result:</h2>
+                        <div id="priorityResult" class="mb-6"></div>
+                        <h3 class="text-xl sm:text-2xl font-bold mb-4 text-blue-700">Explanation:</h3>
+                        <div id="explanation" class="bg-gray-50 p-6 rounded-md border-l-4 border-blue-500">
+                            <div class="input-parameters hidden"></div>
+                            <div class="explanation-content"></div>
+                        </div>
+                        <div class="mt-6 flex space-x-4">
+                            <button id="printButton" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                Print Results
+                            </button>
+                            <button id="writeEmailButton" class="hidden bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 blink">
+                                Write E-mail
+                            </button>
+                            <button id="resetButton" class="hidden bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50">
+                                Reset
+                            </button>
+                        </div>
+                        <div id="ratingSystem" class="mt-8">
+                            <h3 class="text-xl font-bold mb-4 text-blue-700">Rate these results:</h3>
+                            <div class="star-rating flex">
+                                <span class="star" data-rating="1">&#9733;</span>
+                                <span class="star" data-rating="2">&#9733;</span>
+                                <span class="star" data-rating="3">&#9733;</span>
+                                <span class="star" data-rating="4">&#9733;</span>
+                                <span class="star" data-rating="5">&#9733;</span>
+                            </div>
+                            <p id="ratingMessage" class="mt-2 text-gray-600"></p>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+    <footer class="w-full py-4 text-center text-gray-600 flex flex-col sm:flex-row justify-center items-center">
+        <a href="https://techray.dev" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition duration-300">
+            ©2024 TechRay Apps LLC
+        </a>
+        <div class="footer-links mt-2 sm:mt-0 sm:ml-4">
+            <a href="https://apps.techray.dev/itil/terms/" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition duration-300">
+                Terms & Conditions
+            </a>
+            <span class="mx-2">|</span>
+            <a href="https://apps.techray.dev/itil/privacy" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition duration-300">
+                Privacy Policy
+            </a>
+        </div>
+    </footer>
+    <div id="emailModal" class="modal">
+        <div class="modal-content rounded-lg">
+            <h2 class="text-2xl font-bold mb-4">Generated E-mail</h2>
+            <div id="emailContent" class="bg-gray-50 p-4 rounded-md"></div>
+            <div class="mt-4 flex justify-between items-center">
+                <button id="closeModal" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    Close
+                </button>
+                <button id="copyEmail" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                    <i class="fas fa-copy mr-2"></i>Copy to Clipboard
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="https://js.puter.com/v2/"></script>
+    <script src="script.js"></script>
+</body>
+</html>

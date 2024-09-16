@@ -1,0 +1,137 @@
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+.content-width {
+    max-width: 800px;
+    width: 100%;
+}
+.custom-shadow {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+@media (max-width: 640px) {
+    .content-width {
+        width: 95%;
+    }
+    footer {
+        flex-direction: column;
+        align-items: center;
+    }
+    footer > * {
+        margin: 5px 0;
+    }
+    .footer-links {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+#priorityResult {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e40af;
+}
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #result, #result * {
+        visibility: visible;
+    }
+    #result {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+.blink {
+    animation: blink 1s linear infinite;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+}
+.instructions {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+.instructions.show {
+    max-height: 1000px;
+    transition: max-height 0.5s ease-in;
+}
+.logo-container {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+.logo-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+.star-rating {
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+}
+.star-rating .star:hover,
+.star-rating .star.active {
+    color: #ffd700;
+}
+
+/* Hide the Input Parameters section */
+.input-parameters {
+    display: none;
+}
+
+/* Styles for the welcome modal */
+#welcomeModal {
+    transition: opacity 0.3s ease-in-out;
+}
+
+#welcomeModal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#welcomeModal .bg-white {
+    transition: transform 0.3s ease-in-out;
+}
+
+#welcomeModal.hidden .bg-white {
+    transform: scale(0.9);
+}
+
+#welcomeModal.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#welcomeModal.visible .bg-white {
+    transform: scale(1);
+}
