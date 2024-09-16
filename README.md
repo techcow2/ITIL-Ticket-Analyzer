@@ -50,7 +50,7 @@ Live Demo: https://apps.techray.dev/itil
 First, clone this repository to your local machine using:
 
 ```bash
-git clone https://github.com/yourusername/itil-ticket-analyzer.git
+git clone https://github.com/techcow2/itil-ticket-analyzer.git
 ```
 
 ### 2. Set Up the Project
