@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-   
+    // Welcome modal functionality
     const welcomeModal = document.getElementById('welcomeModal');
     const acceptButton = document.getElementById('acceptButton');
 
@@ -57,10 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentRating = 0;
 
-   
+    // Hide rating system on page load
     ratingSystem.classList.add('hidden');
 
-    
+    // Toggle instructions visibility
     toggleInstructions.addEventListener('click', () => {
         instructions.classList.toggle('hidden');
         instructions.classList.toggle('show');
@@ -70,10 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
             : '<i class="fas fa-info-circle mr-2"></i>How to Use';
     });
 
-    
+    // Rate limiting variables
     let tokenBucket = 10;
     const maxTokens = 10;
-    const refillRate = 1; 
+    const refillRate = 1; // 1 token per 6 seconds (10 per minute)
     let lastRefillTimestamp = Date.now();
 
     function refillTokenBucket() {
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        
+        // Check for minimum word count
         const wordCount = summary.split(/\s+/).length;
         if (wordCount < 10) {
             showError('Please enter at least 10 words in your issue description.');
@@ -193,15 +193,15 @@ document.addEventListener('DOMContentLoaded', () => {
         writeEmailButton.classList.add('hidden');
         ratingSystem.classList.add('hidden');
         // Clear the analysis results
-        priorityResult.innerHTML = '';
-        explanation.innerHTML = '';
+        priorityResult.textContent = '';
+        explanation.textContent = '';
         // Reset rating
         currentRating = 0;
         highlightStars(0);
         ratingMessage.textContent = '';
     });
 
-   
+    // Handle star rating selection
     stars.forEach(star => {
         star.addEventListener('click', () => {
             const rating = parseInt(star.getAttribute('data-rating'));
@@ -338,7 +338,7 @@ Your detailed explanation here. Include reasoning for the assigned impact, urgen
             </ul>
         `;
 
-        priorityResult.innerHTML = prioritySection;
+        priorityResult.innerHTML = DOMPurify.sanitize(prioritySection);
 
         const converter = new showdown.Converter();
         
@@ -372,26 +372,26 @@ Your detailed explanation here. Include reasoning for the assigned impact, urgen
                 </div>
             </div>
         `;
-        explanation.innerHTML = explanationHTML;
+        explanation.innerHTML = DOMPurify.sanitize(explanationHTML);
 
         result.classList.remove('hidden');
         ratingSystem.classList.remove('hidden');
         
-     
+        // Show or hide the "Write E-mail" button based on impact, urgency, and priority
         const isHighestPriority = impact.startsWith('1-High') && urgency.startsWith('1-High') && priority.startsWith('1-Critical');
         writeEmailButton.classList.toggle('hidden', !isHighestPriority);
 
-      
+        // Show the Reset button
         resetButton.classList.remove('hidden');
 
-       
+        // Add fade-in animation to results
         result.style.opacity = '0';
         result.style.display = 'block';
-        await new Promise(resolve => setTimeout(resolve, 10)); 
+        await new Promise(resolve => setTimeout(resolve, 10)); // Small delay for the display change to take effect
         result.style.transition = 'opacity 0.5s ease-in-out';
         result.style.opacity = '1';
 
-      
+        // Smooth scroll to results
         result.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
@@ -439,7 +439,7 @@ Email body here
                 ${converter.makeHtml(body)}
             </div>
         `;
-        emailContent.innerHTML = emailHTML;
+        emailContent.innerHTML = DOMPurify.sanitize(emailHTML);
         emailModal.style.display = 'block';
     }
 
